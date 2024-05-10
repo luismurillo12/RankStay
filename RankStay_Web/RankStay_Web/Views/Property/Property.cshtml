@@ -1,0 +1,70 @@
+﻿@model List<RankStay_Web.Entities.ReviewObj>
+
+<div class="container-xxl pt-5">
+    @if (Model.Any())
+    {
+        <h1>Reseñas de <span class="text-primary">@Html.DisplayFor(model => model.First().PropertyName)</span></h1>
+        <p>Ubicada en: <strong> @Html.DisplayFor(model => model.First().ProvinceName) </strong></p>
+    }
+    else
+    {
+        <h1>No hay reseñas registradas en esta propiedad</h1>
+    }
+    <a asp-action="RegisterReview" asp-controller="Review" class="btn btn-primary rounded-pill py-3 px-5">Escribir reseña</a>
+
+    <div class="mt-5">
+        @foreach (var item in Model)
+        {
+            <div class="card flex-row mb-4">
+                @if (item.ReviewStar < 2.0)
+                {
+                    <div class="card-img-left d-flex justify-content-center align-items-center" style="background-color:#f25263; height:200px; width: 200px;">
+                        <div class="display-2">@item.ReviewStar</div>
+                    </div>
+                }
+                else if (item.ReviewStar > 2.1 && item.ReviewStar < 3.5)
+                {
+                    <div class="card-img-left d-flex justify-content-center align-items-center" style="background-color:#ffd30a; height:200px; width: 200px;">
+                        <div class="display-2">@item.ReviewStar</div>
+                    </div>
+                } else
+                {
+                    <div class="card-img-left d-flex justify-content-center align-items-center" style="background-color:#46f432; height:200px; width: 200px;">
+                        <div class="display-2">@item.ReviewStar</div>
+                    </div>
+                }
+
+                <div class="card-body">
+                    <h4 class="card-title h5 h4-sm mb-3">@item.PropertyName</h4>
+                    <div class="card-text property-reviews mb-2">
+                        @{
+                            double? rating = item.ReviewStar;
+                            int numberOfFilledStars = rating.HasValue ? (int)Math.Round(rating.Value) : 0;
+                            int numberOfUnfilledStars = 5 - numberOfFilledStars;
+                        }
+                        <span>
+                            @for (int i = 0; i < numberOfFilledStars; i++)
+                            {
+                                <span class="bi bi-star-fill"></span>
+                            }
+                            @for (int i = 0; i < numberOfUnfilledStars; i++)
+                            {
+                                <span class="bi bi-star"></span>
+                            }
+                        </span>
+                        @if (rating.HasValue)
+                        {
+                            <span>@rating</span>
+                        }
+                        else
+                        {
+                            <span>No rating</span>
+                        }
+                    </div>
+                    <p class="card-text">@item.ReviewComment</p>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
